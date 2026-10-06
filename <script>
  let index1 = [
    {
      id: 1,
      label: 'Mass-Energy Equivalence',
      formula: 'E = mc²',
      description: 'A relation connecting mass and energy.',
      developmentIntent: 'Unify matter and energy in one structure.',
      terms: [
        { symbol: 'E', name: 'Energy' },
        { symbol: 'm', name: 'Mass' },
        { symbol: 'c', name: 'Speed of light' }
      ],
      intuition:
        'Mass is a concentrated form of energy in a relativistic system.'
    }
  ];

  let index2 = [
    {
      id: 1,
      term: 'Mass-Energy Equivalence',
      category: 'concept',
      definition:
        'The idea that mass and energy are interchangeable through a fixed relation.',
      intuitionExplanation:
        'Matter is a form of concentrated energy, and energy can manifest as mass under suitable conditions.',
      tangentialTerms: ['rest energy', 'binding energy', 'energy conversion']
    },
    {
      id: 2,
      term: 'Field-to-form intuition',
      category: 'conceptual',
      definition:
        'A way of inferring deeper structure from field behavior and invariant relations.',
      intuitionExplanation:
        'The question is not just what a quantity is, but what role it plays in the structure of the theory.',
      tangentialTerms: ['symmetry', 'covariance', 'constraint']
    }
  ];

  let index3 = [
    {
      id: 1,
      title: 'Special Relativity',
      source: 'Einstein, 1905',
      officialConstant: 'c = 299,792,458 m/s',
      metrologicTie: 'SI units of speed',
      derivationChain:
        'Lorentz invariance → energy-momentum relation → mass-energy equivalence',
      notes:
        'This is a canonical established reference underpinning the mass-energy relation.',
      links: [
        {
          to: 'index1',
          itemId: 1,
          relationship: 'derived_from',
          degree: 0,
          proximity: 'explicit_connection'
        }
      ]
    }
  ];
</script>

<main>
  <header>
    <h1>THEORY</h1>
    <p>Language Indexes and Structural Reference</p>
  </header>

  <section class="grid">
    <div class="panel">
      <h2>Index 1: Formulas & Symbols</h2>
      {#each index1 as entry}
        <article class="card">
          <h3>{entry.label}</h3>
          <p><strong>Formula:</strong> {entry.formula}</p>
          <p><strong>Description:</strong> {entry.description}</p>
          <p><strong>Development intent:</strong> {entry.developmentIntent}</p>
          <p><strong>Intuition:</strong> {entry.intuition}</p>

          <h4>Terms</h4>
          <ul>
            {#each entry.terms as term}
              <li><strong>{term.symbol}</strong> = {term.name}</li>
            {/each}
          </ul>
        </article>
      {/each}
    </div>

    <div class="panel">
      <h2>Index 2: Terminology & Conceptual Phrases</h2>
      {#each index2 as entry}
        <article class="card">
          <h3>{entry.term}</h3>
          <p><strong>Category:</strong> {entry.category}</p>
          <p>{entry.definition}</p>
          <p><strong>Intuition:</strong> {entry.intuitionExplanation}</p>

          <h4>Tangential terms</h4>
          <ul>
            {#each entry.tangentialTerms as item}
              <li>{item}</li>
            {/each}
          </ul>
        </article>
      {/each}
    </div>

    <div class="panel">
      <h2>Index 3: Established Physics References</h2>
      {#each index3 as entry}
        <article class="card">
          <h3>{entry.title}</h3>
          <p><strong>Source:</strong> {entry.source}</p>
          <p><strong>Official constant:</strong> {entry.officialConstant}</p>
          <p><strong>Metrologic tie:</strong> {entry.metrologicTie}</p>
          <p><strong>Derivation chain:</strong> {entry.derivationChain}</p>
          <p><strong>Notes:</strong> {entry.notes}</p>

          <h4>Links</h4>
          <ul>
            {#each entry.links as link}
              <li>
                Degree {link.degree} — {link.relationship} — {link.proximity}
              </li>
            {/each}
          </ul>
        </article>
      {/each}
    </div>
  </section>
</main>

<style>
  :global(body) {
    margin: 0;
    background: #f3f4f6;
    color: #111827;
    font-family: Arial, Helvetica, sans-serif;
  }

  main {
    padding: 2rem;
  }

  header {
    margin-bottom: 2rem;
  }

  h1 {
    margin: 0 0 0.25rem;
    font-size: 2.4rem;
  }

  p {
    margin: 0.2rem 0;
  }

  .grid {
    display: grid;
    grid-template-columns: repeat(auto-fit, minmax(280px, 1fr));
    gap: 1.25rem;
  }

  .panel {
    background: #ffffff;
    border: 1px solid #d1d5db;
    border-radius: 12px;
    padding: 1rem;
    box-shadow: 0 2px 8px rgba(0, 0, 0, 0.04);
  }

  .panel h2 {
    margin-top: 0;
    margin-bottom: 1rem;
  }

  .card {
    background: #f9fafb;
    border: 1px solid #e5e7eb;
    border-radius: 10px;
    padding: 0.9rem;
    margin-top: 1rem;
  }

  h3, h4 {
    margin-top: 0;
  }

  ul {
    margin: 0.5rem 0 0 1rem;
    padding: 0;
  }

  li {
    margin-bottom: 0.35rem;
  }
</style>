@@ -1,0 +1,201 @@
+<script>
+  let index1 = [
+    {
+      id: 1,
+      label: 'Mass-Energy Equivalence',
+      formula: 'E = mc²',
+      description: 'A relation connecting mass and energy.',
+      developmentIntent: 'Unify matter and energy in one structure.',
+      terms: [
+        { symbol: 'E', name: 'Energy' },
+        { symbol: 'm', name: 'Mass' },
+        { symbol: 'c', name: 'Speed of light' }
+      ],
+      intuition:
+        'Mass is a concentrated form of energy in a relativistic system.'
+    }
+  ];
+
+  let index2 = [
+    {
+      id: 1,
+      term: 'Mass-Energy Equivalence',
+      category: 'concept',
+      definition:
+        'The idea that mass and energy are interchangeable through a fixed relation.',
+      intuitionExplanation:
+        'Matter is a form of concentrated energy, and energy can manifest as mass under suitable conditions.',
+      tangentialTerms: ['rest energy', 'binding energy', 'energy conversion']
+    },
+    {
+      id: 2,
+      term: 'Field-to-form intuition',
+      category: 'conceptual',
+      definition:
+        'A way of inferring deeper structure from field behavior and invariant relations.',
+      intuitionExplanation:
+        'The question is not just what a quantity is, but what role it plays in the structure of the theory.',
+      tangentialTerms: ['symmetry', 'covariance', 'constraint']
+    }
+  ];
+
+  let index3 = [
+    {
+      id: 1,
+      title: 'Special Relativity',
+      source: 'Einstein, 1905',
+      officialConstant: 'c = 299,792,458 m/s',
+      metrologicTie: 'SI units of speed',
+      derivationChain:
+        'Lorentz invariance → energy-momentum relation → mass-energy equivalence',
+      notes:
+        'This is a canonical established reference underpinning the mass-energy relation.',
+      links: [
+        {
+          to: 'index1',
+          itemId: 1,
+          relationship: 'derived_from',
+          degree: 0,
+          proximity: 'explicit_connection'
+        }
+      ]
+    }
+  ];
+</script>
+
+<main>
+  <header>
+    <h1>THEORY</h1>
+    <p>Language Indexes and Structural Reference</p>
+  </header>
+
+  <section class="grid">
+    <div class="panel">
+      <h2>Index 1: Formulas & Symbols</h2>
+      {#each index1 as entry}
+        <article class="card">
+          <h3>{entry.label}</h3>
+          <p><strong>Formula:</strong> {entry.formula}</p>
+          <p><strong>Description:</strong> {entry.description}</p>
+          <p><strong>Development intent:</strong> {entry.developmentIntent}</p>
+          <p><strong>Intuition:</strong> {entry.intuition}</p>
+
+          <h4>Terms</h4>
+          <ul>
+            {#each entry.terms as term}
+              <li><strong>{term.symbol}</strong> = {term.name}</li>
+            {/each}
+          </ul>
+        </article>
+      {/each}
+    </div>
+
+    <div class="panel">
+      <h2>Index 2: Terminology & Conceptual Phrases</h2>
+      {#each index2 as entry}
+        <article class="card">
+          <h3>{entry.term}</h3>
+          <p><strong>Category:</strong> {entry.category}</p>
+          <p>{entry.definition}</p>
+          <p><strong>Intuition:</strong> {entry.intuitionExplanation}</p>
+
+          <h4>Tangential terms</h4>
+          <ul>
+            {#each entry.tangentialTerms as item}
+              <li>{item}</li>
+            {/each}
+          </ul>
+        </article>
+      {/each}
+    </div>
+
+    <div class="panel">
+      <h2>Index 3: Established Physics References</h2>
+      {#each index3 as entry}
+        <article class="card">
+          <h3>{entry.title}</h3>
+          <p><strong>Source:</strong> {entry.source}</p>
+          <p><strong>Official constant:</strong> {entry.officialConstant}</p>
+          <p><strong>Metrologic tie:</strong> {entry.metrologicTie}</p>
+          <p><strong>Derivation chain:</strong> {entry.derivationChain}</p>
+          <p><strong>Notes:</strong> {entry.notes}</p>
+
+          <h4>Links</h4>
+          <ul>
+            {#each entry.links as link}
+              <li>
+                Degree {link.degree} — {link.relationship} — {link.proximity}
+              </li>
+            {/each}
+          </ul>
+        </article>
+      {/each}
+    </div>
+  </section>
+</main>
+
+<style>
+  :global(body) {
+    margin: 0;
+    background: #f3f4f6;
+    color: #111827;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  main {
+    padding: 2rem;
+  }
+
+  header {
+    margin-bottom: 2rem;
+  }
+
+  h1 {
+    margin: 0 0 0.25rem;
+    font-size: 2.4rem;
+  }
+
+  p {
+    margin: 0.2rem 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .panel {
+    background: #ffffff;
+    border: 1px solid #d1d5db;
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+
+  .panel h2 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+
+  .card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  h3, h4 {
+    margin-top: 0;
+  }
+
+  ul {
+    margin: 0.5rem 0 0 1rem;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 0.35rem;
+  }
+</style>

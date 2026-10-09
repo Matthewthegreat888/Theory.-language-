@@ -1,0 +1,31 @@
+<script>
+  // ... your existing arrays ...
+
+  let uploadedFileName = '';
+
+  function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+      uploadedFileName = file.name;
+      // In the future, this is where you will send the file to your backend
+      alert(`File selected: ${file.name}. Backend processing coming soon!`);
+    }
+  }
+</script>
+
+<main>
+  <header>
+    <h1>THEORY</h1>
+    <p>Language Indexes and Structural Reference</p>
+    
+    <!-- ADD THIS UPLOAD SECTION -->
+    <div style="margin-top: 1rem; padding: 1rem; background: #e5e7eb; border-radius: 8px;">
+      <h3>Index a New Document</h3>
+      <input type="file" accept=".pdf,.txt,.md" on:change={handleFileUpload} />
+      {#if uploadedFileName}
+        <p>Ready to index: {uploadedFileName}</p>
+      {/if}
+    </div>
+  </header>
+  
+  <!-- ... rest of your existing code ... -->

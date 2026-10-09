@@ -1,0 +1,15 @@
+# Theory Language Reference
+
+A physics reference with three indexes.
+
+## Files
+- `Theory.svelte` — interactive Svelte component
+- `README.md` — documentation
+
+## Indexes
+1. Formulas & Symbols
+2. Terminology & Conceptual Phrases
+3. Established Physics References
+
+## Usage
+Import `Theory.svelte` into a Svelte app.

@@ -1,0 +1,35 @@
+# Theory Language Reference
+
+A small Svelte component for browsing physics formulas, terminology, and established references.
+
+## Structure
+
+- `Theory.svelte` — the interactive reference component.
+- `README.md` — documentation.
+
+## Indexes
+
+1. **Index 1** — formulas and symbols.
+2. **Index 2** — terminology and conceptual phrases.
+3. **Index 3** — established physics references.
+
+## Data model
+
+Each index is an array of objects with a stable `id`.
+
+### Index 1
+
+```js
+{
+  id: 1,
+  label: 'Mass-Energy Equivalence',
+  formula: 'E = mc²',
+  description: 'A relation connecting mass and energy.',
+  developmentIntent: 'Unify matter and energy in one structure.',
+  terms: [
+    { symbol: 'E', name: 'Energy' },
+    { symbol: 'm', name: 'Mass' },
+    { symbol: 'c', name: 'Speed of light' }
+  ],
+  intuition: 'Mass is a concentrated form of energy in a relativistic system.'
+}

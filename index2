@@ -1,0 +1,8 @@
+{
+  id: 1,
+  term: 'Mass-Energy Equivalence',
+  category: 'concept',
+  definition: 'The idea that mass and energy are interchangeable through a fixed relation.',
+  intuitionExplanation: 'Matter is a form of concentrated energy...',
+  tangentialTerms: ['rest energy', 'binding energy', 'energy conversion']
+}

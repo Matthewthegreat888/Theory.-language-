@@ -1,0 +1,198 @@
+import json
+import re
+from pathlib import Path
+from typing import Dict, List, Any
+
+class DocumentTermExtractor:
+    """Extract terms, definitions, and metadata from documents"""
+
+    def __init__(self, output_file: str = "extracted_terms.json"):
+        self.output_file = output_file
+        self.extracted_data = {
+            "terms": [],
+            "definitions": [],
+            "formulas": [],
+            "metadata": {}
+        }
+
+    def extract_from_txt(self, file_path: str) -> Dict[str, Any]:
+        """Extract terms and definitions from text file"""
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        lines = content.split('\n')
+        
+        for line in lines:
+            line = line.strip()
+            
+            # Look for terms (lines ending with colon)
+            if line.endswith(':') and len(line) > 2:
+                term = line[:-1].strip()
+                self.extracted_data["terms"].append({
+                    "term": term,
+                    "type": "concept"
+                })
+            
+            # Look for definitions (lines starting with "Definition:")
+            if line.startswith("Definition:"):
+                definition = line.replace("Definition:", "").strip()
+                self.extracted_data["definitions"].append({
+                    "definition": definition,
+                    "source": file_path
+                })
+            
+            # Look for formulas (lines with mathematical symbols)
+            if any(symbol in line for symbol in ['=', '²', '³', '∑', '∫']):
+                if len(line) > 5 and len(line) < 200:
+                    self.extracted_data["formulas"].append({
+                        "formula": line,
+                        "source": file_path
+                    })
+
+        return self.extracted_data
+
+    def extract_from_md(self, file_path: str) -> Dict[str, Any]:
+        """Extract terms and definitions from Markdown file"""
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+
+        lines = content.split('\n')
+        
+        i = 0
+        while i < len(lines):
+            line = lines[i].strip()
+            
+            # Look for markdown headers as terms
+            if line.startswith('##'):
+                term = line.replace('##', '').strip()
+                self.extracted_data["terms"].append({
+                    "term": term,
+                    "type": "heading"
+                })
+            
+            # Look for bold text as terms
+            if line.startswith('**') and line.endswith('**'):
+                term = line.replace('**', '').strip()
+                self.extracted_data["terms"].append({
+                    "term": term,
+                    "type": "bold"
+                })
+            
+            # Look for definition patterns
+            if line.startswith('-') and i + 1 < len(lines):
+                next_line = lines[i + 1].strip()
+                if next_line and not next_line.startswith('-'):
+                    self.extracted_data["definitions"].append({
+                        "definition": next_line,
+                        "context": line,
+                        "source": file_path
+                    })
+            
+            i += 1
+
+        return self.extracted_data
+
+    def extract_from_pdf(self, file_path: str) -> Dict[str, Any]:
+        """Extract terms from PDF (requires PyPDF2)"""
+        try:
+            import PyPDF2
+        except ImportError:
+            print("PyPDF2 not installed. Install with: pip install PyPDF2")
+            return self.extracted_data
+
+        with open(file_path, 'rb') as f:
+            pdf_reader = PyPDF2.PdfReader(f)
+            
+            for page_num in range(len(pdf_reader.pages)):
+                page = pdf_reader.pages[page_num]
+                text = page.extract_text()
+                
+                # Extract terms and definitions using text patterns
+                lines = text.split('\n')
+                for line in lines:
+                    line = line.strip()
+                    if line and len(line) > 5:
+                        self.extracted_data["terms"].append({
+                            "term": line[:50],
+                            "page": page_num + 1,
+                            "source": file_path
+                        })
+
+        return self.extracted_data
+
+    def extract_json_index(self, file_path: str) -> Dict[str, Any]:
+        """Extract terms from a JSON index file"""
+        with open(file_path, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if isinstance(value, list):
+                    for item in value:
+                        if isinstance(item, dict):
+                            if 'term' in item:
+                                self.extracted_data["terms"].append(item)
+                            if 'definition' in item:
+                                self.extracted_data["definitions"].append(item)
+                            if 'formula' in item:
+                                self.extracted_data["formulas"].append(item)
+
+        return self.extracted_data
+
+    def process_file(self, file_path: str) -> Dict[str, Any]:
+        """Process file based on extension"""
+        file_path = Path(file_path)
+        
+        if not file_path.exists():
+            print(f"File not found: {file_path}")
+            return self.extracted_data
+
+        suffix = file_path.suffix.lower()
+
+        if suffix == '.txt':
+            return self.extract_from_txt(str(file_path))
+        elif suffix == '.md':
+            return self.extract_from_md(str(file_path))
+        elif suffix == '.pdf':
+            return self.extract_from_pdf(str(file_path))
+        elif suffix == '.json':
+            return self.extract_json_index(str(file_path))
+        else:
+            print(f"Unsupported file type: {suffix}")
+            return self.extracted_data
+
+    def save_to_json(self) -> str:
+        """Save extracted data to JSON file"""
+        with open(self.output_file, 'w', encoding='utf-8') as f:
+            json.dump(self.extracted_data, f, indent=2)
+
+        print(f"Saved to {self.output_file}")
+        return self.output_file
+
+    def display_summary(self):
+        """Display a summary of extracted data"""
+        print("\n=== Extraction Summary ===")
+        print(f"Terms found: {len(self.extracted_data['terms'])}")
+        print(f"Definitions found: {len(self.extracted_data['definitions'])}")
+        print(f"Formulas found: {len(self.extracted_data['formulas'])}")
+
+        if self.extracted_data['terms']:
+            print("\nFirst 5 terms:")
+            for term in self.extracted_data['terms'][:5]:
+                print(f"  - {term.get('term', 'N/A')}")
+
+
+# Usage example
+if __name__ == "__main__":
+    # Create extractor
+    extractor = DocumentTermExtractor(output_file="physics_terms.json")
+
+    # Process a document
+    file_path = input("Enter document path (txt, md, pdf, or json): ").strip()
+    
+    if file_path:
+        extractor.process_file(file_path)
+        extractor.display_summary()
+        extractor.save_to_json()
+    else:
+        print("No file provided.")

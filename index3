@@ -1,0 +1,18 @@
+{
+  id: 1,
+  title: 'Special Relativity',
+  source: 'Einstein, 1905',
+  officialConstant: 'c = 299,792,458 m/s',
+  metrologicalTie: 'SI units of speed',
+  derivationChain: 'Lorentz invariance → energy-momentum relation → mass-energy equivalence',
+  notes: 'This is a canonical established reference...',
+  links: [
+    {
+      to: 'index1',
+      itemId: 1,
+      relationship: 'derives',
+      degree: 0,
+      proximity: 'explicit_connection'
+    }
+  ]
+}
